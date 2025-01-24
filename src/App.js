@@ -40,8 +40,8 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!newItem.trim()) return; // Ensure no empty or whitespace-only items
-    addItem(newItem.trim());
+    if (!newItem) return; // Ensure no empty or whitespace-only items
+    addItem(newItem);
     setNewItem('');
   };
 
