@@ -3,39 +3,34 @@ import SearchItem from './SearchItem';
 import AddItem from './AddItem';
 import Content2 from './Content2';
 import Footer from './Footer';
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 
 function App() {
-  // Ensure items is always an array, even if localStorage is empty or invalid
-  const [items, setItems] = useState(() => {
-    const savedItems = localStorage.getItem('shoppinglist');
-    return savedItems ? JSON.parse(savedItems) : []; // Fallback to an empty array
-  });
+  const [items, setItems] = useState(JSON.parse(localStorage.getItem('shoppinglist')) || []); 
   const [newItem, setNewItem] = useState('');
   const [search, setSearch] = useState('');
 
-  const setAndSaveItems = (newItems) => {
-    setItems(newItems);
-    localStorage.setItem('shoppinglist', JSON.stringify(newItems));
-  };
+  useEffect(() => {
+    localStorage.setItem('shoppinglist', JSON.stringify(items)); // UseEffect is a async function, It cheack the dependecy and when it is updated or chage it calls and if we don't give any dependency here it should run for every task we do in our application and if we give only blank dependency it should run for every load of our application.
+  },[items]);
 
   const addItem = (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
     const myNewItem = { id, checked: false, item };
     const listItems = [...items, myNewItem];
-    setAndSaveItems(listItems);
+    setItems(listItems);
   };
 
   const handleCheck = (id) => {
     const listItems = items.map((item) =>
       item.id === id ? { ...item, checked: !item.checked } : item
     );
-    setAndSaveItems(listItems);
+    setItems(listItems);
   };
 
   const handleDelete = (id) => {
     const listItems = items.filter((item) => item.id !== id);
-    setAndSaveItems(listItems);
+    setItems(listItems);
   };
 
   const handleSubmit = (e) => {
